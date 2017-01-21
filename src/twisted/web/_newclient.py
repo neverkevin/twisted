@@ -31,6 +31,7 @@ __metaclass__ = type
 
 from zope.interface import implementer
 
+from twisted.internet import reactor
 from twisted.python import log
 from twisted.python.compat import networkString
 from twisted.python.components import proxyForInterface
@@ -644,6 +645,7 @@ class Request:
         if len(hosts) != 1:
             raise BadHeaders(u"Exactly one Host header required")
 
+        td = reactor.callLater(180, transport.loseConnection)
         # In the future, having the protocol version be a parameter to this
         # method would probably be good.  It would be nice if this method
         # weren't limited to issuing HTTP/1.1 requests.
